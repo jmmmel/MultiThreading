@@ -1,14 +1,23 @@
 package edu.mel06002byui.multithreading;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    private ArrayAdapter<Integer> evenAdapter;
+    private ArrayAdapter<Integer> oddAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +48,42 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void loadFromFile(View view) {
+        if(evenAdapter == null) {
+            
+        }
+        evenAdapter.clear();
+        oddAdapter.clear();
+
+        String evenFilename = "evens.txt";
+        String oddFilename = "odds.txt";
+        FileInputStream inputEven;
+        FileInputStream inputOdd;
+
+
     }
 
-    public void clearAdapter(View view) {
+    public void stopProgram(View view) {
+
     }
 
     public void createFile(View view) {
+        String evenFilename = "evens.txt";
+        String oddFilename = "odds.txt";
+        FileOutputStream outputStreamEven;
+        FileOutputStream outputStreamOdd;
+        try{
+            outputStreamEven = openFileOutput(evenFilename, Context.MODE_PRIVATE);
+            outputStreamOdd = openFileOutput(oddFilename, Context.MODE_PRIVATE);
+            for (Integer numInput = 1; numInput < 21; numInput++) {
+                if (numInput % 2 == 1) {
+                    outputStreamOdd.write(numInput.toString().getBytes());
+                } else {
+                    outputStreamEven.write(numInput.toString().getBytes());
+                }
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Error Creating Files");
+        }
     }
 }
