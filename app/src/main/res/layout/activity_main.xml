@@ -11,27 +11,48 @@
         android:layout_height="wrap_content"
         android:text="Create"
         android:id="@+id/buttonCreate"
-        android:layout_alignParentTop="true"
+        android:onClick="createFile"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="createFile"/>
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Clear"
         android:id="@+id/buttonClear"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="clearAdapter"/>
+        android:onClick="clearList"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Load"
         android:id="@+id/buttonLoad"
-        android:layout_alignBottom="@+id/buttonClear"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="loadFromFile"/>
+        android:onClick="loadFromFile"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/buttonClear"
+        android:layout_alignEnd="@+id/buttonClear"
+        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_alignParentTop="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_below="@+id/progressBar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/buttonCreate" />
+
 </RelativeLayout>
