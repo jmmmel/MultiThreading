@@ -22,7 +22,9 @@ import java.util.ArrayList;
 
 import static android.R.layout.simple_list_item_1;
 
-
+/**
+ * This is the Main Screen for this activity
+ */
 public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = "MainActivity";
@@ -58,6 +60,11 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * This will clear the progress bar then load from the numbers.txt file
+     *  The LoadFilesTask is an Asynctask that loads on a different thread
+     * @param view default param
+     */
     public void loadFromFile(View view) {
         ProgressBar bar = (ProgressBar) findViewById(R.id.progressBar);
         bar.setProgress(0);
@@ -65,6 +72,11 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    /**
+     * Sets the Progress Bar to 0
+     * Clears the listView on the main screen
+     * @param view default param
+     */
     public void clearList(View view) {
         ProgressBar bar = (ProgressBar) findViewById(R.id.progressBar);
         bar.setProgress(0);
@@ -74,6 +86,11 @@ public class MainActivity extends ActionBarActivity {
             adapter.clear();
     }
 
+    /**
+     * Creates a CreateFileTask that is an Asynctask
+     *     that will make a file with a sequence of numbers
+     * @param view default param
+     */
     public void createFile(View view) {
         ProgressBar bar = (ProgressBar) findViewById(R.id.progressBar);
         bar.setProgress(0);
@@ -81,9 +98,18 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    /**
+     * Asynctask that will create a file and add numbers per the NUMITEMS constant
+     */
     private class CreateFileTask extends
             AsyncTask<Void, Integer, Void> {
 
+        /**
+         * Creates and writes a file
+         * updates on each number
+         * @param params no input used
+         * @return dose not return anything
+         */
         @Override
         protected Void doInBackground(Void... params) {
             OutputStreamWriter outputStreamNumbers;
@@ -110,12 +136,19 @@ public class MainActivity extends ActionBarActivity {
             return null;
         }
 
+        /**
+         * calls to update the progress bar
+         * @param progress Integer from 0 - 100
+         */
         protected void onProgressUpdate(Integer... progress) {
             setProgressPercent(progress[0]);
         }
 
     }
 
+    /**
+     * Loads the items from FILENAME constant
+     */
     private class LoadFilesTask extends
             AsyncTask<Void, Integer, ArrayList<Integer>> {
 
@@ -128,7 +161,7 @@ public class MainActivity extends ActionBarActivity {
                 if (readFiles != null) {
                     InputStreamReader inReader = new InputStreamReader(readFiles);
                     BufferedReader brInput = new BufferedReader(inReader);
-                    String currLine = "";
+                    String currLine;
                     double progressCounter = 0;
                     while ((currLine = brInput.readLine()) != null) {
                         numberList.add(Integer.valueOf(currLine));
@@ -151,22 +184,38 @@ public class MainActivity extends ActionBarActivity {
             return numberList;
         }
 
+        /**
+         * Updates after each item read in
+         * @param progress Integer from 0 - 100
+         */
         protected void onProgressUpdate(Integer... progress) {
             setProgressPercent(progress[0]);
         }
 
+        /**
+         * This will set the read in numbers to the listView
+         * @param result List of Integers read in from the file
+         */
         protected void onPostExecute(ArrayList<Integer> result) {
             setResults(result);
         }
     }
 
+    /**
+     * Takes a list of Integer objects and writes them to a listView in the main activity
+     * @param result numbers to be added to the list view
+     */
     private void setResults(ArrayList<Integer> result) {
         ListView mainListView = (ListView) findViewById(R.id.listView);
-        mainListView.setAdapter(new ArrayAdapter<Integer>(this,
+        mainListView.setAdapter(new ArrayAdapter<>(this,
                 simple_list_item_1, result));
     }
 
 
+    /**
+     * Updates the progress bar in the main view
+     * @param progress Integer from 0 - 100 representing percent complete
+     */
     private void setProgressPercent(Integer progress) {
         ProgressBar myBar = (ProgressBar) findViewById(R.id.progressBar);
         myBar.setProgress(progress);
