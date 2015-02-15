@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,13 +22,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+
+import static android.R.layout.simple_list_item_1;
 
 
 public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = "MainActivity";
-    private ArrayAdapter<Integer> evenAdapter;
-    private ArrayAdapter<Integer> oddAdapter;
+    private final String FILENAME = "numbers.txt";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,58 +62,55 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void loadFromFile(View view) {
-        try{
-            InputStream readFiles = openFileInput("evens.txt");
-            if(readFiles != null) {
+        try {
+            InputStream readFiles = openFileInput(FILENAME);
+            ArrayList<Integer> numberList = new ArrayList<>();
+            if (readFiles != null) {
                 InputStreamReader inReader = new InputStreamReader(readFiles);
                 BufferedReader brInput = new BufferedReader(inReader);
                 String currLine = "";
-                StringBuilder evenInput = new StringBuilder();
-                while((currLine = brInput.readLine()) != null) {
-                    evenInput.append(currLine + " ");
+                while ((currLine = brInput.readLine()) != null) {
+                    numberList.add(Integer.valueOf(currLine));
                 }
                 readFiles.close();
-                TextView scriptureDisplayValue = new TextView(this);
-                scriptureDisplayValue.setTextSize(50);
-                scriptureDisplayValue.setText(evenInput.toString());
-                setContentView(scriptureDisplayValue);
+                ListView mainListView = (ListView) findViewById(R.id.listView);
+                ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(this,
+                        simple_list_item_1, numberList);
+                mainListView.setAdapter(adapter);
             }
-        }
-        catch (FileNotFoundException err){
+        } catch (FileNotFoundException err) {
             Log.d(TAG, "FILE MISSING!!!!");
-        }
-        catch (IOException err) {
+        } catch (IOException err) {
             Log.d(TAG, "CAN'T WRITE!!!");
         }
 
     }
 
-    public void stopProgram(View view) {
-
+    public void clearList(View view) {
+        ListView mainListView = (ListView) findViewById(R.id.listView);
+        ArrayAdapter<Integer> adapter = (ArrayAdapter<Integer>)mainListView.getAdapter();
+        adapter.clear();
     }
 
     public void createFile(View view) {
-        String evenFilename = "evens.txt";
-        String oddFilename = "odds.txt";
-        OutputStreamWriter outputStreamEven;
-        OutputStreamWriter outputStreamOdd;
-        try{
-            outputStreamEven =
-                    new OutputStreamWriter(openFileOutput(evenFilename, Context.MODE_PRIVATE));
-            outputStreamOdd =
-                    new OutputStreamWriter(openFileOutput(oddFilename, Context.MODE_PRIVATE));
-            for (Integer numInput = 1; numInput < 21; numInput++) {
-                if (numInput % 2 == 1) {
-                    outputStreamOdd.write(numInput.toString() + "\n");
-                } else {
-                    outputStreamEven.write(numInput.toString() + "\n");
-                }
+
+        OutputStreamWriter outputStreamNumbers;
+        try {
+            outputStreamNumbers =
+                    new OutputStreamWriter(openFileOutput(FILENAME, Context.MODE_PRIVATE));
+
+            for (Integer numInput = 1; numInput <= 10; numInput++) {
+                outputStreamNumbers.write(numInput.toString() + "\n");
+                Thread.sleep(250);
             }
-            outputStreamEven.close();
-            outputStreamOdd.close();
-        }
-        catch (Exception e) {
+
+            outputStreamNumbers.close();
+        } catch (FileNotFoundException e) {
             Log.v(TAG, "FILE CREATION ISSUE!!!");
+        } catch (IOException err) {
+            Log.v(TAG, "CAN'T WRITE");
+        } catch (InterruptedException e) {
+            Log.v(TAG, "INTERRUPTED!!!");
         }
     }
 }
